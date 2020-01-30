@@ -1,10 +1,10 @@
-import { createStore, compose, applyMiddleWare } from "redux";
+import { createStore, compose, applyMiddleware } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 
 import rootReducer from "./reducers";
 import rootSaga from "./sagas";
 
-import middlewares, { sagaMiddleware } from "./middleWares";
+import middlewares, { sagaMiddleware } from "./middlewares";
 
 export default (initialState = {}) => {
   let store;
@@ -13,12 +13,12 @@ export default (initialState = {}) => {
     store = createStore(
       rootReducer,
       initialState,
-      compose(applyMiddleWare(...middlewares))
+      compose(applyMiddleware(...middlewares))
     );
   } else {
     store = createStore(
       rootReducer,
-      composeWithDevTools(applyMiddleWare(...middlewares))
+      composeWithDevTools(applyMiddleware(...middlewares))
     );
   }
 

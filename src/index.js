@@ -1,10 +1,23 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.scss";
-import App from "./App"; // Our App Functional Component
+import { Provider } from "react-redux";
+import { configure as configureStore } from "store";
 import * as serviceWorker from "./serviceWorker";
+import Routes from "./routes";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+const store = configureStore({});
+
+const render = Component => {
+  ReactDOM.render(
+    <Provider {...{ store }}>
+      <Component {...{ store }} />
+    </Provider>,
+    document.getElementById("root")
+  );
+};
+
+render(Routes);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

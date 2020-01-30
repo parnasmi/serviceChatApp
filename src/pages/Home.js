@@ -4,8 +4,9 @@ import React from "react";
 import { connect } from "react-redux"; // HOC
 import Hero from "components/Hero";
 import ServiceItem from "components/service/ServiceItem";
-
-import { fetchServices } from "store/actions/services";
+import { bindActionCreators } from "redux";
+// import { fetchServices } from "store/actions/services";
+import ServiceActions from "store/actions/services";
 
 class Home extends React.Component {
   state = {
@@ -13,7 +14,10 @@ class Home extends React.Component {
   };
 
   componentDidMount() {
-    this.props.dispatch(fetchServices());
+    // console.log("before dispatch");
+    // console.log("ServiceActions", this.props.fetchServices);
+    // this.props.dispatch(ServiceActions.FetchServices());
+    this.props.fetchServices();
   }
 
   renderServices = services =>
@@ -44,6 +48,21 @@ class Home extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({ services: state.service.items });
+const mapStateToProps = state => ({ services: state.services.items });
 
-export default connect(mapStateToProps)(Home);
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     fetchServices: dispatch(ServiceActions.FetchServices())
+//   };
+// };
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      fetchServices: ServiceActions.FetchServices
+    },
+    dispatch
+  );
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
+// export default Home;

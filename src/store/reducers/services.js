@@ -1,4 +1,5 @@
-import { FETCH_SERVICES } from "types";
+// import { FETCH_SERVICES } from "types";
+import ServiceActions from "store/actions/services";
 
 const INITIAL_STATE = {
   items: []
@@ -6,8 +7,8 @@ const INITIAL_STATE = {
 
 const servicesReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case FETCH_SERVICES:
-      return { ...state, items: action.services };
+    case ServiceActions.FetchServices.SUCCESS:
+      return { ...state, items: action.payload };
     default:
       return state;
   }

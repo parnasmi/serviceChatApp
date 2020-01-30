@@ -1,4 +1,4 @@
-import configure from "./actions";
+import configure from "./configure";
 
 export { configure };
 
