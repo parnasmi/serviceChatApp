@@ -14,14 +14,11 @@ class Home extends React.Component {
   };
 
   componentDidMount() {
-    // console.log("before dispatch");
-    // console.log("ServiceActions", this.props.fetchServices);
-    // this.props.dispatch(ServiceActions.FetchServices());
     this.props.fetchServices();
   }
 
   renderServices = services =>
-    services.map(service => <ServiceItem key={service.id} service={service} />);
+    services.map(service => <ServiceItem service={service} key={service.id} />);
 
   render() {
     const { services } = this.props;
@@ -32,9 +29,7 @@ class Home extends React.Component {
           <div className="container">
             <div className="title-wrapper has-text-centered">
               <h2 className="title is-2">Great Power Comes </h2>
-              <h3 className="subtitle is-5 is-muted">
-                With great Responsability
-              </h3>
+              <h3 className="subtitle is-5 is-muted">With great Responsability</h3>
               <div className="divider is-centered"></div>
             </div>
 
@@ -48,7 +43,7 @@ class Home extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({ services: state.services.items });
+const mapStateToProps = state => ({ services: state.services.all });
 
 // const mapDispatchToProps = dispatch => {
 //   return {
