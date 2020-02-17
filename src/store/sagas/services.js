@@ -1,4 +1,4 @@
-import { takeEvery, put, /*call,*/ all, select } from "redux-saga/effects";
+import { takeEvery, put, /*call,*/ all /*select*/ } from "redux-saga/effects";
 import db from "store/db";
 import ServiceActions from "store/actions/services";
 
