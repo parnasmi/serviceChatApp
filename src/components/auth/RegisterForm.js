@@ -1,27 +1,33 @@
 /* eslint no-useless-escape: 0 */
 
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { validators, toast } from "helpers";
 import { useToasts } from "react-toast-notifications";
+import { Redirect } from "react-router-dom";
 const { isValidImage, sameAs, isValidUrl } = validators;
 
 function RegisterForm({ Register }) {
   const { register, handleSubmit, errors, getValues } = useForm();
   const { addToast } = useToasts();
+  const [redirect, setRedirect] = useState(false);
   function onSubmitForm(values) {
     Register({
       values,
       cb: {
         onSuccess: data => {
-          console.log("sent", data);
           toast.success("Succesfully sent", addToast);
+          setRedirect(true);
         },
         onError: err => {
           toast.error(err, addToast);
         }
       }
     });
+  }
+
+  if (redirect) {
+    return <Redirect to="/" />;
   }
 
   return (

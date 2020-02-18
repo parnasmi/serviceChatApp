@@ -1,6 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useToasts } from "react-toast-notifications";
+import { Redirect } from "react-router-dom";
 
 const Login = () => {
+  // const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, errors, getValues } = useForm();
+  const [redirect, setRedirect] = useState(false);
+
+  const onSubmitForm = values => {
+    console.log("values", values);
+  };
+
+  if (redirect) {
+    return <Redirect to="/" />;
+  }
+  console.log("test");
   return (
     <div className="auth-page">
       <div className="container has-text-centered">
@@ -11,37 +26,40 @@ const Login = () => {
             <figure className="avatar">
               <img src="https://placehold.it/128x128" alt="" />
             </figure>
-            <form>
+            <form onSubmit={handleSubmit(onSubmitForm)}>
               <div className="field">
                 <div className="control">
                   <input
+                    ref={register()}
                     className="input is-large"
                     type="email"
                     placeholder="Your Email"
-                    autofocus=""
-                    autocomplete="email"
+                    autoComplete="email"
+                    name="email"
                   />
-                  <div className="form-error">
+                  {/* <div className="form-error">
                     <span className="help is-danger">Email is required</span>
                     <span className="help is-danger">Email address is not valid</span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className="field">
                 <div className="control">
                   <input
+                    name="password"
                     className="input is-large"
                     type="password"
                     placeholder="Your Password"
-                    autocomplete="current-password"
+                    autoComplete="current-password"
+                    ref={register()}
                   />
-                  <div className="form-error">
+                  {/* <div className="form-error">
                     <span className="help is-danger">Password is required</span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <button
-                type="button"
+                type="submit"
                 className="button is-block is-info is-large is-fullwidth">
                 Sign In
               </button>
