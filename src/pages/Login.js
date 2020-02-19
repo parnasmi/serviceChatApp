@@ -2,20 +2,34 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useToasts } from "react-toast-notifications";
 import { Redirect } from "react-router-dom";
-
-const Login = () => {
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import Actions from "store/actions";
+import { toast } from "helpers";
+const Login = ({ LoginUser }) => {
   // const { register, handleSubmit } = useForm();
-  const { register, handleSubmit, errors, getValues } = useForm();
+  const { register, handleSubmit } = useForm();
+  const { addToast } = useToasts();
   const [redirect, setRedirect] = useState(false);
 
   const onSubmitForm = values => {
-    console.log("values", values);
+    LoginUser({
+      values,
+      cb: {
+        onSuccess: data => {
+          toast.success("Succesfully sent", addToast);
+          setRedirect(true);
+        },
+        onError: err => {
+          toast.error(err, addToast);
+        }
+      }
+    });
   };
 
   if (redirect) {
     return <Redirect to="/" />;
   }
-  console.log("test");
   return (
     <div className="auth-page">
       <div className="container has-text-centered">
@@ -76,4 +90,7 @@ const Login = () => {
   );
 };
 
-export default Login;
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ LoginUser: Actions.auth.Login }, dispatch);
+
+export default connect(null, mapDispatchToProps)(Login);

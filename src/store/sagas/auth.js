@@ -1,11 +1,11 @@
-import { takeEvery, call, /*put,*/ all } from "redux-saga/effects";
+import { takeLatest, call, /*put,*/ all } from "redux-saga/effects";
 import db from "store/db";
 import Actions from "store/actions";
 import firebase from "firebase/app";
 import "firebase/auth";
 
 const {
-  auth: { Register }
+  auth: { Register, Login }
 } = Actions;
 
 const createUserProfile = userProfile => {
@@ -43,13 +43,34 @@ function* RegisterUser(action) {
 
     // yield put(ServiceActions.FetchServices.success(services));
     // yield call(api.request.delete, queryBuilder(`/filemanager/${imageId}`));
-  } catch (e) {
-    yield call(cb.onError, e.message);
+  } catch (err) {
+    yield call(cb.onError, err.message);
   } finally {
     // yield put(filemanagerActions.UploadImages.fulfill());
   }
 }
 
+function* LoginUser(action) {
+  const {
+    values: { email, password },
+    cb
+  } = action.payload;
+
+  try {
+    const response = yield firebase.auth().signInWithEmailAndPassword(email, password);
+    console.log("response", response);
+    const onAuthStateChange = yield firebase
+      .auth()
+      .onAuthStateChanged(authUser => authUser);
+    console.log("onAuthStateChange", onAuthStateChange);
+  } catch (err) {
+    yield call(cb.onError, err.message);
+  }
+}
+
 export default function* root() {
-  yield all([takeEvery(Register.TRIGGER, RegisterUser)]);
+  yield all([
+    takeLatest(Register.TRIGGER, RegisterUser),
+    takeLatest(Login.TRIGGER, LoginUser)
+  ]);
 }
