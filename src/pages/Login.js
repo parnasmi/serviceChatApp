@@ -17,7 +17,7 @@ const Login = ({ LoginUser }) => {
       values,
       cb: {
         onSuccess: data => {
-          toast.success("Succesfully sent", addToast);
+          toast.success("Succesfully Logined", addToast);
           setRedirect(true);
         },
         onError: err => {

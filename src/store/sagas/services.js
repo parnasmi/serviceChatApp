@@ -13,7 +13,7 @@ function* FetchServices(action) {
       .get()
       .then(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
 
-    yield put(ServiceActions.FetchServices.success(services));
+    yield put(ServiceActions.FetchServices.success({ services }));
     // yield call(api.request.delete, queryBuilder(`/filemanager/${imageId}`));
   } catch (e) {
     // yield put(filemanagerActions.UploadImages.failure(e));

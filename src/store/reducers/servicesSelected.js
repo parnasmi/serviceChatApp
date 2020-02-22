@@ -15,6 +15,8 @@ const initSelectedReducer = () => {
     switch (action.type) {
       case ServiceActions.FetchServicesSelected.REQUEST:
         return false;
+      case ServiceActions.FetchServicesSelected.SUCCESS:
+        return true;
       default:
         return true;
     }

@@ -13,7 +13,7 @@ const initServices = () => {
       // case ServiceActions.FetchServices.SUCCESS:
       //   return { ...state, items: action.payload, isFetched: true };
       case ServiceActions.FetchServices.SUCCESS:
-        return action.payload;
+        return action.payload.services;
       default:
         return state;
     }

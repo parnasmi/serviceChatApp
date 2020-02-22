@@ -1,56 +1,40 @@
-import React from "react";
-
-// import { Provider } from "react-redux";
-// import initStore from './store'
-
-// import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-// import { configure as configureStore } from "store";
+import React, { useEffect } from "react";
 
 import Sidebar from "components/Sidebar";
 import Navbar from "components/Navbar";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import Actions from "store/actions";
 
-// const store = configureStore();
+function App({ Getme, children, auth, Logout }) {
+  console.log("auth", auth);
+  useEffect(() => {
+    Getme();
+  }, [Getme]);
 
-function App(props) {
   return (
     <>
-      <Navbar />
+      <Navbar {...{ auth, Logout }} />
       <Navbar id="navbar-clone" />
-      <Sidebar />
-      {props.children}
+      <Sidebar {...{ auth }} />
+      {children}
     </>
   );
 }
-// function App() {
-//   return (
-//     <Provider store={store}>
-//       <Router>
-//         <Navbar />
-//         <Navbar id="navbar-clone" />
-//         <Sidebar />
-//         <Switch>
-//           <Route path="/register">
-//             <RegisterPage />
-//           </Route>
-//           <Route path="/login">
-//             <LoginPage />
-//           </Route>
-//           <Route path="/services">
-//             <ServicesPage />
-//           </Route>
-//           <Route path="/profile">
-//             <ProfilePage />
-//           </Route>
-//           <Route path="/faq">
-//             <FaqPage />
-//           </Route>
-//           <Route path="/">
-//             <HomePage />
-//           </Route>
-//         </Switch>
-//       </Router>
-//     </Provider>
-//   );
-// }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    auth: state.auth
+  };
+};
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      Getme: Actions.auth.GetMe,
+      Logout: Actions.auth.Logout
+    },
+    dispatch
+  );
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
