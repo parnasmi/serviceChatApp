@@ -11,16 +11,20 @@ function RegisterForm({ Register }) {
   const { register, handleSubmit, errors, getValues } = useForm();
   const { addToast } = useToasts();
   const [redirect, setRedirect] = useState(false);
+  const [loading, setLoading] = useState(false);
   function onSubmitForm(values) {
+    setLoading(true);
     Register({
       values,
       cb: {
         onSuccess: data => {
           toast.success("Succesfully sent", addToast);
+          setLoading(false);
           setRedirect(true);
         },
         onError: err => {
           toast.error(err, addToast);
+          setLoading(false);
         }
       }
     });
@@ -157,7 +161,12 @@ function RegisterForm({ Register }) {
           )}
         </div>
       </div>
-      <button type="submit" className="button is-block is-info is-large is-fullwidth">
+      <button
+        type="submit"
+        className={`button is-block is-info is-large is-fullwidth ${
+          loading ? "is-loading disabled" : ""
+        }`}
+        disabled={loading}>
         Register
       </button>
     </form>

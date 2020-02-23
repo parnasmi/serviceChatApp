@@ -7,15 +7,14 @@ import { bindActionCreators } from "redux";
 import Actions from "store/actions";
 
 function App({ Getme, children, auth, Logout }) {
-  console.log("auth", auth);
   useEffect(() => {
     Getme();
   }, [Getme]);
 
   return (
     <>
-      <Navbar {...{ auth, Logout }} />
-      <Navbar id="navbar-clone" />
+      <Navbar id="navbar-main" {...{ auth, Logout }} />
+      <Navbar id="navbar-clone" {...{ auth, Logout }} />
       <Sidebar {...{ auth }} />
       {children}
     </>

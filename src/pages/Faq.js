@@ -1,6 +1,8 @@
+import React from "react";
+import withAuthentication from "components/hoc/withAuthentication";
 
-import React from 'react'
+const Faq = props => {
+  return <h1>I am FAQ Page</h1>;
+};
 
-const Faq = () => <h1>I am FAQ Page</h1>
-
-export default Faq
+export default withAuthentication(Faq);

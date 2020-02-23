@@ -1,10 +1,11 @@
 import React from "react";
-import { connect } from "react-redux";
-import Actions from "store/actions";
+// import { connect } from "react-redux";
+// import Actions from "store/actions";
 import { Auth } from "components";
-import { bindActionCreators } from "redux";
+// import { bindActionCreators } from "redux";
+import withOnlyGuests from "components/hoc/withOnlyGuests";
 
-const Register = ({ Register }) => {
+const Register = ({ RegisterUser }) => {
   return (
     <div className="auth-page">
       <div className="container has-text-centered">
@@ -15,7 +16,7 @@ const Register = ({ Register }) => {
             <figure className="avatar">
               <img src="https://placehold.it/128x128" alt="" />
             </figure>
-            <Auth.RegisterForm {...{ Register }} />
+            <Auth.RegisterForm {...{ Register: RegisterUser }} />
           </div>
           <p className="has-text-grey">
             <a href="/">Sign In With Google</a>&nbsp;
@@ -28,13 +29,4 @@ const Register = ({ Register }) => {
   );
 };
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(
-    {
-      Register: Actions.auth.Register
-    },
-    dispatch
-  );
-};
-
-export default connect(null, mapDispatchToProps)(Register);
+export default withOnlyGuests(Register);

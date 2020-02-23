@@ -1,17 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useToasts } from "react-toast-notifications";
 import { Redirect } from "react-router-dom";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import Actions from "store/actions";
+
 import { toast } from "helpers";
-const Login = ({ LoginUser }) => {
+import withOnlyGuests from "components/hoc/withOnlyGuests";
+
+const Login = ({ auth: { isFetched }, LoginUser }) => {
   // const { register, handleSubmit } = useForm();
   const { register, handleSubmit } = useForm();
   const { addToast } = useToasts();
   const [redirect, setRedirect] = useState(false);
 
+  useEffect(() => {
+    return () => {
+      setRedirect(false);
+    };
+  }, [redirect]);
   const onSubmitForm = values => {
     LoginUser({
       values,
@@ -74,7 +79,10 @@ const Login = ({ LoginUser }) => {
               </div>
               <button
                 type="submit"
-                className="button is-block is-info is-large is-fullwidth">
+                className={`button is-block is-info is-large is-fullwidth ${
+                  !isFetched ? "is-loading" : ""
+                }`}
+                disabled={!isFetched}>
                 Sign In
               </button>
             </form>
@@ -90,7 +98,4 @@ const Login = ({ LoginUser }) => {
   );
 };
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ LoginUser: Actions.auth.Login }, dispatch);
-
-export default connect(null, mapDispatchToProps)(Login);
+export default withOnlyGuests(Login);
