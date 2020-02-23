@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { useParams } from "react-router-dom";
 import FetchServices from "store/actions/services";
-import { Spinner } from "components";
+import { Spinner, Service } from "components";
 
 function ServicesDetails({ fetchServicesSelected, serviceItem, isFetched }) {
   const { id } = useParams();
@@ -35,9 +35,7 @@ function ServicesDetails({ fetchServicesSelected, serviceItem, isFetched }) {
                   <h2 className="subtitle is-4">{description}</h2>
                   <br />
                   <p className="has-text-centered">
-                    <button className="button is-medium is-info is-outlined">
-                      Learn more
-                    </button>
+                    <Service.OfferModal service={serviceItem} />
                   </p>
                 </div>
               </div>

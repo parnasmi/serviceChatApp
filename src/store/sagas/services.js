@@ -49,6 +49,11 @@ function* FetchServicesSelected(action) {
       .get()
       .then(snapshot => ({ ...snapshot.data(), id: snapshot.id }));
 
+    //fetching user's profile and attach to SelectedService
+    const user = yield service.user.get();
+    service.user = user.data();
+    service.user.id = user.id;
+
     yield put(ServiceActions.FetchServicesSelected.success({ service }));
   } catch (e) {
   } finally {
@@ -56,10 +61,12 @@ function* FetchServicesSelected(action) {
 }
 
 function* CreateService(action) {
-  const { values, cb } = action.payload;
+  let { values, cb } = action.payload;
 
   try {
     yield put(ServiceActions.CreateService.request());
+    //creating referance to user's profile
+    values.user = db.doc(`profiles/${values.userId}`);
     const newService = yield db
       .collection("services")
       .add(values)
@@ -72,6 +79,9 @@ function* CreateService(action) {
   } finally {
   }
 }
+
+//createUserRef = (uid) => db.doc('profiles/' + uid)
+//createRef = (collection,docId) => db.doc(`${collection}/${docId}`)
 
 export default function* root() {
   yield all([

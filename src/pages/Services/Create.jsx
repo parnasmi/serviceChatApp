@@ -22,7 +22,7 @@ function Create(props) {
 		e.preventDefault();
 		
 		CreateService({
-      values: { ...formValues, userId: user.uid },
+      values: { ...formValues, userId: user.uid, price: parseInt(formValues.price, 10) },
       cb: {
         onSuccess: () => {
           toast.success("New Service is Successfully created", addToast);
