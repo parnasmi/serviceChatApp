@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { useParams } from "react-router-dom";
@@ -7,7 +7,7 @@ import { Spinner, Service } from "components";
 
 function ServicesDetails({ fetchServicesSelected, serviceItem, isFetched }) {
   const { id } = useParams();
-
+  const [visible, setVisible] = useState(false);
   useEffect(
     function() {
       fetchServicesSelected({ id });
@@ -34,9 +34,12 @@ function ServicesDetails({ fetchServicesSelected, serviceItem, isFetched }) {
                   <h1 className="title is-2">{title}</h1>
                   <h2 className="subtitle is-4">{description}</h2>
                   <br />
-                  <p className="has-text-centered">
-                    <Service.OfferModal service={serviceItem} />
-                  </p>
+                  <div className="has-text-centered">
+                    <Service.OfferModal
+                      service={serviceItem}
+                      {...{ visible, setVisible }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

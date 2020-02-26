@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 const Modal = props => {
   const [isActive, setIsActive] = useState(false);
-
+	const { isFetched } = props;
   const changeModalState = modalState => setIsActive(modalState);
 
   return (
@@ -27,7 +27,9 @@ const Modal = props => {
           </header>
           <section className="modal-card-body">{props.children}</section>
           <footer className="modal-card-foot">
-            <button onClick={props.onModalSubmit} className="button is-success">
+            <button
+              onClick={() => props.onModalSubmit(() => changeModalState(false))}
+              className={`button is-success ${!isFetched ? 'is-loading': ''}`}>
               Save changes
             </button>
             <button onClick={() => changeModalState(false)} className="button">

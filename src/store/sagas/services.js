@@ -1,6 +1,7 @@
 import { takeLatest, put, /*call,*/ all /*select*/ } from "redux-saga/effects";
 import db from "store/db";
 import ServiceActions from "store/actions/services";
+import firebaseFunc from "helpers/firebase";
 
 function* FetchServices(action) {
   // const { imageId } = action.payload;
@@ -62,17 +63,16 @@ function* FetchServicesSelected(action) {
 
 function* CreateService(action) {
   let { values, cb } = action.payload;
-
+  console.log("values", values);
   try {
     yield put(ServiceActions.CreateService.request());
     //creating referance to user's profile
-    values.user = db.doc(`profiles/${values.userId}`);
-    const newService = yield db
+    values.user = firebaseFunc.createRef("profiles", values.userId);
+
+    yield db
       .collection("services")
       .add(values)
       .then(docRef => docRef.id);
-    console.log("newService", newService);
-    // yield put(ServiceActions.FetchServicesSelected.success({ service }));
     cb.onSuccess();
   } catch (e) {
     cb.onError(e.message);
