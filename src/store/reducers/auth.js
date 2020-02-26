@@ -30,6 +30,11 @@ const auth = (state = INITIAL_STATE, action) => {
         user: payload.user,
         isFetched: true
       };
+    case Login.FAILURE:
+      return {
+        ...state,
+        isFetched: true
+      };
 
     case Logout.SUCCESS:
     case Logout.FAILURE:
