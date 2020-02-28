@@ -12,6 +12,8 @@ const RegisterPage = lazy(() => import("pages/Register"));
 const HomePage = lazy(() => import("pages/Home"));
 const ServicesCreate = lazy(() => import("pages/Services/Create"));
 const UserServicesList = lazy(() => import("pages/Services/List"));
+const FetchSentOffers = lazy(() => import("pages/Offers/SentOffers"));
+const FetchReceivedOffers = lazy(() => import("pages/Offers/ReceivedOffers"));
 
 export default function(props) {
   return (
@@ -27,6 +29,8 @@ export default function(props) {
               <Route path="/services/me" exact component={UserServicesList} />
               <Route path="/services/:id" exact component={ServicesDetailsPage} />
               <Route path="/services" exact component={ServicesPage} />
+              <Route path="/offers/sent" exact component={FetchSentOffers} />
+              <Route path="/offers/received" exact component={FetchReceivedOffers} />
               <Route path="/login" exact component={LoginPage} />
               <Route path="/register" exact component={RegisterPage} />
             </Switch>
