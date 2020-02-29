@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import withAuthentication from "components/hoc/withAuthentication";
 import ServiceItem from "components/service/ServiceItem";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import OfferActions from "store/actions/offers";
 
-const SentOffers = ({ auth }) => {
+const { FetchOffers } = OfferActions;
+
+const SentOffers = ({ auth, FetchOffers }) => {
+  useEffect(() => {
+    FetchOffers({ userId: auth.user.uid, offerType: "received" });
+  }, []);
+
+	
+	
   return (
     <div className="container">
       <div className="content-wrapper">
@@ -40,4 +51,18 @@ const SentOffers = ({ auth }) => {
   );
 };
 
-export default withAuthentication(SentOffers);
+// const mapStateToProps = state => {
+// 	return {
+
+// 	}
+// }
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      FetchOffers
+    },
+    dispatch
+  );
+
+export default withAuthentication(connect(null, mapDispatchToProps)(SentOffers));

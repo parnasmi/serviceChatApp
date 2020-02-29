@@ -12,8 +12,6 @@ const {createRef} = firebase;
 
 const OfferModal = ({
   service,
-  visible,
-  setVisible,
   offers: { isFetched, offers },
   CreateOffer,
   auth
@@ -60,8 +58,6 @@ const OfferModal = ({
 				}
 		}});
   };
-
-  console.log("service", service);
 
   return (
     <Modal
