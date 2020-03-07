@@ -33,6 +33,10 @@ $section-grey: #fbfbfb;
 @import './blocks/auth.scss';
 @import './blocks/services.scss';
 
+.s-m-r {
+  margin-right: 5px;
+}
+
 .feature-card.offer-card {
     height: auto;
     padding-bottom: 20px;

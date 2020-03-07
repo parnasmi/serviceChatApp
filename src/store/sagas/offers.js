@@ -3,7 +3,7 @@ import db from "store/db";
 import OfferActions from "store/actions/offers";
 import firebaseFunc from "helpers/firebase";
 
-const { CreateOffer, FetchOffers } = OfferActions;
+const { CreateOffer, FetchOffers, ChangeOfferStatus } = OfferActions;
 
 // function* extractDataFromOffer(offer, userType) {
 //   const service = yield offer.service.get();
@@ -27,6 +27,34 @@ function* CreateOfferSaga(action) {
     cb.onSuccess();
   } catch (error) {
     yield put(CreateOffer.failure({ error }));
+    cb.onError(error.message);
+  } finally {
+  }
+}
+
+function* ChangeOfferStatusSaga(action) {
+  let { offerId, status, cb } = action.payload;
+  try {
+    yield put(ChangeOfferStatus.request());
+
+    const offer = yield db
+      .collection("offers")
+      .doc(offerId)
+      .update({ status });
+    console.log("changed offer", offer);
+
+    /*
+			const service = yield db
+			.collection("services")
+			.doc(id)
+			.get()
+			.then(snapshot => ({ ...snapshot.data(), id: snapshot.id }));
+		*/
+
+    yield put(ChangeOfferStatus.success());
+    cb.onSuccess();
+  } catch (error) {
+    yield put(ChangeOfferStatus.failure({ error }));
     cb.onError(error.message);
   } finally {
   }
@@ -75,6 +103,7 @@ function* FetchOffersSaga(action) {
 export default function* root() {
   yield all([
     takeLatest(CreateOffer.TRIGGER, CreateOfferSaga),
-    takeLatest(FetchOffers.TRIGGER, FetchOffersSaga)
+    takeLatest(FetchOffers.TRIGGER, FetchOffersSaga),
+    takeLatest(ChangeOfferStatus.TRIGGER, ChangeOfferStatusSaga)
   ]);
 }

@@ -14,7 +14,6 @@ function withAuthentication(Component) {
         if (!isFetched) {
           return <Spinner />;
         } else {
-          console.log("in auth");
           return isAuth ? <Component {...this.props} /> : <Redirect to="/login" />;
         }
       };
