@@ -1,4 +1,4 @@
-import { takeLatest, put, /*call,*/ all /*select*/ } from "redux-saga/effects";
+import { takeLatest, put, select, /*call,*/ all /*select*/ } from "redux-saga/effects";
 import db from "store/db";
 import ServiceActions from "store/actions/services";
 import firebaseFunc from "helpers/firebase";
@@ -9,13 +9,28 @@ function* FetchServices(action) {
   try {
     yield put(ServiceActions.FetchServices.request());
 
-    const services = yield db
+    // const services = yield db
+    //   .collection("services")
+    //   .get()
+    //   .then(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+
+    let services;
+    const servicesSnapshot = yield db
       .collection("services")
       .get()
-      .then(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      .then(snapshot => snapshot);
+
+    if (!servicesSnapshot.metadata.fromCache) {
+      services = servicesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } else {
+      //For caching purposes
+      services = yield select(state => state.services.items);
+    }
 
     yield put(ServiceActions.FetchServices.success({ services }));
-  } catch (e) {
+  } catch (error) {
+    console.log("error", error);
+    yield put(ServiceActions.FetchServices.failure({ error }));
   } finally {
     // yield put(filemanagerActions.UploadImages.fulfill());
   }

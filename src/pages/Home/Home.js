@@ -33,8 +33,8 @@ class Home extends React.Component {
               <div className="divider is-centered"></div>
             </div>
 
-            <div className="content-wrapper">
-              <div className="columns">{this.renderServices(services)}</div>
+            <div className="content-wrapper ">
+              <div className="columns is-multiline">{this.renderServices(services)}</div>
             </div>
           </div>
         </section>
@@ -43,7 +43,10 @@ class Home extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({ services: state.services.all });
+const mapStateToProps = state => ({
+  services: state.services.items,
+  isFetched: state.services.isFetched
+});
 
 // const mapDispatchToProps = dispatch => {
 //   return {

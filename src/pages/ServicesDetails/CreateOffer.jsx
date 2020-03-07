@@ -1,22 +1,17 @@
 import React, { useState } from "react";
 import Modal from "components/Modal";
-import get from 'lodash/get';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import get from "lodash/get";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import OfferActions from "store/actions/offers";
-import firebase from 'helpers/firebase'
+import firebase from "helpers/firebase";
 import { useToasts } from "react-toast-notifications";
 import { toast } from "helpers";
 
-const {createRef} = firebase;
+const { createRef } = firebase;
 
-const OfferModal = ({
-  service,
-  offers: { isFetched, offers },
-  CreateOffer,
-  auth
-}) => {
-	const { addToast } = useToasts();
+const OfferModal = ({ service, offers: { isFetched, offers }, CreateOffer, auth }) => {
+  const { addToast } = useToasts();
   const [offer, setOffer] = useState({
     fromUser: "",
     toUser: "",
@@ -25,11 +20,9 @@ const OfferModal = ({
     price: 0,
     time: 0,
     note: ""
-	});
-	
-	const userId = auth && auth.user && auth.user.uid
+  });
 
-  
+  const userId = auth && auth.user && auth.user.uid;
 
   const handleChange = ({ target: { value, name } }) => {
     if (name === "time") {
@@ -40,30 +33,30 @@ const OfferModal = ({
     return setOffer({ ...offer, [name]: value });
   };
 
-  const handleSubmit = (closeModal) => {
-		const modifiedOffers = {...offer};
-		
-		modifiedOffers.fromUser = createRef("profiles", userId);
-		modifiedOffers.toUser = createRef("profiles", service.user.id);
-		modifiedOffers.service = createRef("services", service.id);
-		
-		CreateOffer({ values:modifiedOffers , cb: {
-				onSuccess: data => {
-						toast.success("Succesfully created offer", addToast);
-						// setRedirect(true);
-						closeModal()
-				},
-				onError: err => {
-						toast.error(err, addToast);
-				}
-		}});
+  const handleSubmit = closeModal => {
+    const modifiedOffers = { ...offer };
+
+    modifiedOffers.fromUser = createRef("profiles", userId);
+    modifiedOffers.toUser = createRef("profiles", service.user.id);
+    modifiedOffers.service = createRef("services", service.id);
+
+    CreateOffer({
+      values: modifiedOffers,
+      cb: {
+        onSuccess: data => {
+          toast.success("Succesfully created offer", addToast);
+          // setRedirect(true);
+          closeModal();
+        },
+        onError: err => {
+          toast.error(err, addToast);
+        }
+      }
+    });
   };
 
   return (
-    <Modal
-      onModalSubmit={handleSubmit}
-      openButtonText="Make an offer"
-      {...{ isFetched }}>
+    <Modal onModalSubmit={handleSubmit} openButtonText="Make an offer" {...{ isFetched }}>
       <div className="field">
         <input
           onChange={handleChange}

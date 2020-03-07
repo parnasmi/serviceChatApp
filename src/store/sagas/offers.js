@@ -23,9 +23,11 @@ function* CreateOfferSaga(action) {
       .collection("offers")
       .add(values)
       .then(docRef => docRef);
+    yield put(CreateOffer.success());
     cb.onSuccess();
-  } catch (e) {
-    cb.onError(e.message);
+  } catch (error) {
+    yield put(CreateOffer.failure({ error }));
+    cb.onError(error.message);
   } finally {
   }
 }
@@ -50,20 +52,21 @@ function* FetchOffersSaga(action) {
       .get()
       .then(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     // const userForCard
-    const fullOffers = yield all(
+    const allOffers = yield all(
       offers.map(function*(offer) {
         const service = yield offer.service.get();
+
         const fromUser = yield offer["fromUser"].get();
         const toUser = yield offer["toUser"].get();
         offer.service = service.data();
         offer["fromUser"] = fromUser.data();
         offer["toUser"] = toUser.data();
+
         return offer;
       })
     );
 
-    console.log("fullOffers", fullOffers);
-    yield put(FetchOffers.success({ offers: fullOffers, offerType }));
+    yield put(FetchOffers.success({ offers: allOffers, offerType }));
   } catch (e) {
   } finally {
   }

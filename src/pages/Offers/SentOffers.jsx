@@ -4,7 +4,9 @@ import ServiceItem from "components/service/ServiceItem";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import OfferActions from "store/actions/offers";
+// import get from "lodash/get";
 
+import { Spinner } from "components";
 const { FetchOffers } = OfferActions;
 
 const SentOffers = ({ auth, FetchOffers, offers }) => {
@@ -13,20 +15,23 @@ const SentOffers = ({ auth, FetchOffers, offers }) => {
   }, []);
 
   const { isFetched, sent } = offers;
-  console.log("isFetched offers", isFetched, sent);
   return (
     <div className="container">
       <div className="content-wrapper">
         <h1 className="title">Sent Offers</h1>
-        {/* <div className="columns">
-          {isFetched && sent.map(offer => (
-            <div key={offer.id} className="column is-one-third">
-              <ServiceItem noButton className="offer-card" service={offer.service}>
+        <div className="columns is-multiline">
+          {isFetched &&
+            sent.map(offer => (
+              <ServiceItem
+                noButton
+                className="offer-card"
+                service={offer.service}
+                key={offer.id}>
                 <div className="tag is-large">{offer.status}</div>
                 <hr />
                 <div className="service-offer">
                   <div>
-                    <span className="label">From User:</span> {offer.fromUser.fullName}
+                    <span className="label">To User:</span> {offer.toUser.fullName}
                   </div>
                   <div>
                     <span className="label">Note:</span> {offer.note}
@@ -39,15 +44,19 @@ const SentOffers = ({ auth, FetchOffers, offers }) => {
                   </div>
                 </div>
               </ServiceItem>
-            </div>
-          ))}
-        </div> */}
+            ))}
+          {!isFetched && <Spinner />}
+        </div>
       </div>
     </div>
   );
 };
 
-const mapStateToProps = ({ offers }) => ({ offers });
+const mapStateToProps = state => {
+  return {
+    offers: state.offers
+  };
+};
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(

@@ -4,6 +4,7 @@ import { bindActionCreators } from "redux";
 import { useParams } from "react-router-dom";
 import FetchServices from "store/actions/services";
 import { Spinner, Service } from "components";
+import CreateOffer from "./CreateOffer";
 
 function ServicesDetails({ fetchServicesSelected, serviceItem, isFetched }) {
   const { id } = useParams();
@@ -35,10 +36,7 @@ function ServicesDetails({ fetchServicesSelected, serviceItem, isFetched }) {
                   <h2 className="subtitle is-4">{description}</h2>
                   <br />
                   <div className="has-text-centered">
-                    <Service.OfferModal
-                      service={serviceItem}
-                      {...{ visible, setVisible }}
-                    />
+                    <CreateOffer service={serviceItem} {...{ visible, setVisible }} />
                   </div>
                 </div>
               </div>
