@@ -14,14 +14,6 @@ const SentOffers = ({ auth, FetchOffers, offers, ChangeOfferStatus }) => {
     FetchOffers({ userId: auth.user.uid, offerType: "received" });
   }, []);
 
-  const acceptOffer = offerId => {
-		
-	};
-
-  const declineOffer = offerId => {
-    // console.log(`Declining ${offer}`);
-	};
-	
 	const changeStatus = (offerId, status) => {
 		const cb = {
 			onSuccess: () => {

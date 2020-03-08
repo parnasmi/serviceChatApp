@@ -37,21 +37,12 @@ function* ChangeOfferStatusSaga(action) {
   try {
     yield put(ChangeOfferStatus.request());
 
-    const offer = yield db
+    yield db
       .collection("offers")
       .doc(offerId)
       .update({ status });
-    console.log("changed offer", offer);
 
-    /*
-			const service = yield db
-			.collection("services")
-			.doc(id)
-			.get()
-			.then(snapshot => ({ ...snapshot.data(), id: snapshot.id }));
-		*/
-
-    yield put(ChangeOfferStatus.success());
+    yield put(ChangeOfferStatus.success({ offerId, status }));
     cb.onSuccess();
   } catch (error) {
     yield put(ChangeOfferStatus.failure({ error }));

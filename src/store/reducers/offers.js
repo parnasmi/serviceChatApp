@@ -1,12 +1,6 @@
 import OfferActions from "store/actions/offers";
 
-const { SUCCESS, REQUEST, FAILURE } = OfferActions.FetchOffers;
-
-const {
-  SUCCESS: CREATE_SUCCESS,
-  REQUEST: CREATE_REQUEST,
-  FAILURE: CREATE_FAILURE
-} = OfferActions.CreateOffer;
+const { ChangeOfferStatus, FetchOffers, CreateOffer } = OfferActions;
 
 const INITIAL_STATE = {
   isFetched: true,
@@ -17,12 +11,12 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case CREATE_REQUEST:
-    case REQUEST: {
+    case CreateOffer.REQUEST:
+    case FetchOffers.REQUEST: {
       return { ...state, isFetched: false };
     }
 
-    case SUCCESS: {
+    case FetchOffers.SUCCESS: {
       const { offers, offerType } = action.payload;
 
       return {
@@ -31,18 +25,18 @@ export default (state = INITIAL_STATE, action) => {
         isFetched: true
       };
     }
-    case CREATE_SUCCESS: {
+    case CreateOffer.SUCCESS: {
       return {
         ...state,
         isFetched: true
       };
     }
 
-    case FAILURE: {
+    case FetchOffers.FAILURE: {
       return { ...state, error: action.payload.error, isFetched: true };
     }
 
-    case CREATE_FAILURE: {
+    case CreateOffer.FAILURE: {
       return { ...state, error: action.payload.error, isFetched: true };
     }
 
