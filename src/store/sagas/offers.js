@@ -1,4 +1,4 @@
-import { takeLatest, put, all /*select*/ } from "redux-saga/effects";
+import { takeLatest, put, all, call } from "redux-saga/effects";
 import db from "store/db";
 import OfferActions from "store/actions/offers";
 import firebaseFunc from "helpers/firebase";
@@ -43,11 +43,12 @@ function* ChangeOfferStatusSaga(action) {
       .update({ status });
 
     yield put(ChangeOfferStatus.success({ offerId, status }));
-    cb.onSuccess();
+    yield call(cb.onSuccess);
   } catch (error) {
     yield put(ChangeOfferStatus.failure({ error }));
-    cb.onError(error.message);
+    yield call(cb.onError, error);
   } finally {
+    yield call(cb.onFinally);
   }
 }
 
@@ -70,7 +71,7 @@ function* FetchOffersSaga(action) {
       .where(userType, "==", userRef)
       .get()
       .then(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    // const userForCard
+
     const allOffers = yield all(
       offers.map(function*(offer) {
         const service = yield offer.service.get();
@@ -78,6 +79,7 @@ function* FetchOffersSaga(action) {
         const fromUser = yield offer["fromUser"].get();
         const toUser = yield offer["toUser"].get();
         offer.service = service.data();
+        offer.service.id = service.id;
         offer["fromUser"] = fromUser.data();
         offer["toUser"] = toUser.data();
 

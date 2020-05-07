@@ -1,30 +1,52 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import withAuthentication from "components/hoc/withAuthentication";
 import ServiceItem from "components/service/ServiceItem";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import OfferActions from "store/actions/offers";
-// import get from "lodash/get";
-// import cx from 'classnames';
+import cx from "classnames";
 import { Spinner } from "components";
+import { toast } from "helpers";
+import { useToasts } from "react-toast-notifications";
 const { FetchOffers, ChangeOfferStatus } = OfferActions;
 
-const SentOffers = ({ auth, FetchOffers, offers, ChangeOfferStatus }) => {
+const ReceivedOffers = ({ auth, FetchOffers, offers, ChangeOfferStatus }) => {
+	const { addToast } = useToasts();
+	const [loading, setLoading] = useState({})
   useEffect(() => {
     FetchOffers({ userId: auth.user.uid, offerType: "received" });
-  }, []);
+  }, [auth.user.uid,FetchOffers]);
+	
+	useEffect(() => {
+		
+		let offersLoadingState = {};
+    offers &&
+      offers.received.forEach(offer => {
+				offersLoadingState[offer.id] = { accepted: false, declined: false };
+      });
+			setLoading(offersLoadingState);
+  }, [offers]);
 
-	const changeStatus = (offerId, status) => {
-		const cb = {
-			onSuccess: () => {
-				console.log('successfully changes')
+  const changeStatus = (offerId, status) => {
+		setLoading({ ...loading, [offerId]: { ...loading[offerId], [status]: true } });
+    const cb = {
+      onSuccess: () => {
+				if (status === 'accepted')
+					toast.success("Succesfully accepted", addToast);
+				else
+					toast.success("Succesfully declined", addToast);
+      },
+      onError: (err) => {
+        toast.error(err, addToast);
 			},
-			onError: () => {
-				console.log('failed')
-			},
-		}
-		ChangeOfferStatus({ offerId, status, cb});
-	}
+			onFinally:() => {
+				setLoading({ ...loading, [offerId]: { ...loading[offerId], [status]: false } });
+			}
+    };
+    ChangeOfferStatus({ offerId, status, cb });
+	};
+	
+	
 
   const statusClass = status => {
     switch (status) {
@@ -42,8 +64,8 @@ const SentOffers = ({ auth, FetchOffers, offers, ChangeOfferStatus }) => {
     }
   };
 
-  const { isFetched, received } = offers;
-
+	const { isFetched, received } = offers;
+	
   return (
     <div className="container">
       <div className="content-wrapper">
@@ -80,12 +102,21 @@ const SentOffers = ({ auth, FetchOffers, offers, ChangeOfferStatus }) => {
                       <hr />
                       <button
                         onClick={() => changeStatus(offer.id, "accepted")}
-                        className="button is-success s-m-r">
+                        className={cx(
+                          "button",
+                          "is-success",
+                          "s-m-r",
+                          loading[offer.id] && loading[offer.id].accepted && "is-loading"
+                        )}>
                         Accept
                       </button>
                       <button
                         onClick={() => changeStatus(offer.id, "declined")}
-                        className="button is-danger">
+                        className={cx(
+                          "button",
+                          "is-danger",
+                          loading[offer.id] && loading[offer.id].declined && "is-loading"
+                        )}>
                         Decline
                       </button>
                     </div>
@@ -116,5 +147,5 @@ const mapDispatchToProps = dispatch =>
   );
 
 export default withAuthentication(
-  connect(mapStateToProps, mapDispatchToProps)(SentOffers)
+  connect(mapStateToProps, mapDispatchToProps)(ReceivedOffers)
 );

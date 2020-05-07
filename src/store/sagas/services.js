@@ -1,4 +1,4 @@
-import { takeLatest, put, select, /*call,*/ all /*select*/ } from "redux-saga/effects";
+import { takeLatest, put, select, all } from "redux-saga/effects";
 import db from "store/db";
 import ServiceActions from "store/actions/services";
 import firebaseFunc from "helpers/firebase";
@@ -18,18 +18,17 @@ function* FetchServices(action) {
     const servicesSnapshot = yield db
       .collection("services")
       .get()
-      .then(snapshot => snapshot);
+      .then((snapshot) => snapshot);
 
     if (!servicesSnapshot.metadata.fromCache) {
-      services = servicesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      services = servicesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     } else {
       //For caching purposes
-      services = yield select(state => state.services.items);
+      services = yield select((state) => state.services.items);
     }
 
     yield put(ServiceActions.FetchServices.success({ services }));
   } catch (error) {
-    console.log("error", error);
     yield put(ServiceActions.FetchServices.failure({ error }));
   } finally {
     // yield put(filemanagerActions.UploadImages.fulfill());
@@ -45,7 +44,7 @@ function* FetchUserServices(action) {
       .collection("services")
       .where("userId", "==", userId)
       .get()
-      .then(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      .then((snapshot) => snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
 
     yield put(ServiceActions.FetchUserServices.success({ services }));
   } catch (err) {
@@ -63,7 +62,7 @@ function* FetchServicesSelected(action) {
       .collection("services")
       .doc(id)
       .get()
-      .then(snapshot => ({ ...snapshot.data(), id: snapshot.id }));
+      .then((snapshot) => ({ ...snapshot.data(), id: snapshot.id }));
 
     //fetching user's profile and attach to SelectedService
     const user = yield service.user.get();
@@ -78,7 +77,6 @@ function* FetchServicesSelected(action) {
 
 function* CreateService(action) {
   let { values, cb } = action.payload;
-  console.log("values", values);
   try {
     yield put(ServiceActions.CreateService.request());
     //creating referance to user's profile
@@ -87,7 +85,7 @@ function* CreateService(action) {
     yield db
       .collection("services")
       .add(values)
-      .then(docRef => docRef.id);
+      .then((docRef) => docRef.id);
     cb.onSuccess();
   } catch (e) {
     cb.onError(e.message);

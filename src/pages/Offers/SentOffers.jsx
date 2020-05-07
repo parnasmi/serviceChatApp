@@ -4,6 +4,7 @@ import ServiceItem from "components/service/ServiceItem";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import OfferActions from "store/actions/offers";
+import { newMessage, newCollaboration } from "helpers";
 // import get from "lodash/get";
 
 import { Spinner } from "components";
@@ -12,7 +13,16 @@ const { FetchOffers } = OfferActions;
 const SentOffers = ({ auth, FetchOffers, offers }) => {
   useEffect(() => {
     FetchOffers({ userId: auth.user.uid, offerType: "sent" });
-  }, []);
+	}, []);
+	
+	const createCollaboration = offer => {
+			const { user } = auth;
+			const collaboration = newCollaboration({offer, fromUser: user})
+			const message = newMessage({offer, fromUser: user})
+			
+			console.log("collaboration", collaboration);
+			console.log("message", message);
+	} 
 
   const { isFetched, sent } = offers;
   return (
@@ -43,6 +53,14 @@ const SentOffers = ({ auth, FetchOffers, offers }) => {
                     <span className="label">Time:</span> {offer.time} hours
                   </div>
                 </div>
+								{ offer.status === 'accepted' &&
+										<div>
+												<hr />
+												<button 
+														onClick={() => createCollaboration(offer)}
+														className="button is-success">Collaborate</button>
+										</div>
+								}
               </ServiceItem>
             ))}
           {!isFetched && <Spinner />}
